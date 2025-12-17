@@ -1,0 +1,9 @@
+.include INV.cir
+.include NAND2.cir
+
+* 2-Input OR Gate implemented using INV + NAND2
+.subckt OR2 a b out vdd gnd
+XINV1 a a_inv vdd gnd INV
+XINV2 b b_inv vdd gnd INV
+XNAND1 a_inv b_inv out vdd gnd NAND2
+.ends OR2

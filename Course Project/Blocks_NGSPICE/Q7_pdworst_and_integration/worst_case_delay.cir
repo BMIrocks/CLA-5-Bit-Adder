@@ -1,0 +1,201 @@
+**CLA_Adder_2024102042
+.include TSMC_180nm.txt
+.param SUPPLY=1.8
+.global gnd vdd
+.param LAMBDA=0.09u
+.param width_N=1.8u
+.param width_P=2*width_N
+
+* inverter
+.subckt INV in out vdd gnd
+M_N out in gnd gnd CMOSN W={width_N} L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_P out in vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+.ends INV
+
+* 2 input nand
+.subckt NAND2 a b out vdd gnd
+M_N1 out a n1 gnd CMOSN W={2*width_N} L={2*LAMBDA}
++ AS={5*2*width_N*LAMBDA} PS={10*LAMBDA+2*2*width_N} AD={5*2*width_N*LAMBDA} PD={10*LAMBDA+2*2*width_N}
+M_N2 n1 b gnd gnd CMOSN W={2*width_N} L={2*LAMBDA}
++ AS={5*2*width_N*LAMBDA} PS={10*LAMBDA+2*2*width_N} AD={5*2*width_N*LAMBDA} PD={10*LAMBDA+2*2*width_N}
+M_P1 out a vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P2 out b vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+.ends NAND2
+
+* 2 input nor
+.subckt NOR2 a b out vdd gnd
+M_N1 out a gnd gnd CMOSN W={width_N} L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_N2 out b gnd gnd CMOSN W={width_N} L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_P1 out a n1 vdd CMOSP W={2*width_P} L={2*LAMBDA}
++ AS={5*2*width_P*LAMBDA} PS={10*LAMBDA+2*2*width_P} AD={5*2*width_P*LAMBDA} PD={10*LAMBDA+2*2*width_P}
+M_P2 n1 b vdd vdd CMOSP W={2*width_P} L={2*LAMBDA}
++ AS={5*2*width_P*LAMBDA} PS={10*LAMBDA+2*2*width_P} AD={5*2*width_P*LAMBDA} PD={10*LAMBDA+2*2*width_P}
+.ends NOR2
+
+* 2 input or
+.subckt OR2 a b out vdd gnd
+XNOR a b nor_out vdd gnd NOR2
+XINV nor_out out vdd gnd INV
+.ends OR2
+
+* 2 input xor
+.subckt XOR2 a b out vdd gnd
+XNAND1 a b nand_ab vdd gnd NAND2
+XNAND2 a nand_ab nand_a vdd gnd NAND2
+XNAND3 b nand_ab nand_b vdd gnd NAND2
+XNAND4 nand_a nand_b out vdd gnd NAND2
+.ends XOR2
+
+* 3 input and (NAND3)
+.subckt NAND3 a b c out vdd gnd
+M_N1 out a n1 gnd CMOSN W={3*width_N} L={2*LAMBDA}
++ AS={5*3*width_N*LAMBDA} PS={10*LAMBDA+2*3*width_N} AD={5*3*width_N*LAMBDA} PD={10*LAMBDA+2*3*width_N}
+M_N2 n1 b n2 gnd CMOSN W={3*width_N} L={2*LAMBDA}
++ AS={5*3*width_N*LAMBDA} PS={10*LAMBDA+2*3*width_N} AD={5*3*width_N*LAMBDA} PD={10*LAMBDA+2*3*width_N}
+M_N3 n2 c gnd gnd CMOSN W={3*width_N} L={2*LAMBDA}
++ AS={5*3*width_N*LAMBDA} PS={10*LAMBDA+2*3*width_N} AD={5*3*width_N*LAMBDA} PD={10*LAMBDA+2*3*width_N}
+M_P1 out a vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P2 out b vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P3 out c vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+.ends NAND3
+
+* 4 input and (NAND4)
+.subckt NAND4 a b c d out vdd gnd
+M_N1 out a n1 gnd CMOSN W={4*width_N} L={2*LAMBDA}
++ AS={5*4*width_N*LAMBDA} PS={10*LAMBDA+2*4*width_N} AD={5*4*width_N*LAMBDA} PD={10*LAMBDA+2*4*width_N}
+M_N2 n1 b n2 gnd CMOSN W={4*width_N} L={2*LAMBDA}
++ AS={5*4*width_N*LAMBDA} PS={10*LAMBDA+2*4*width_N} AD={5*4*width_N*LAMBDA} PD={10*LAMBDA+2*4*width_N}
+M_N3 n2 c n3 gnd CMOSN W={4*width_N} L={2*LAMBDA}
++ AS={5*4*width_N*LAMBDA} PS={10*LAMBDA+2*4*width_N} AD={5*4*width_N*LAMBDA} PD={10*LAMBDA+2*4*width_N}
+M_N4 n3 d gnd gnd CMOSN W={4*width_N} L={2*LAMBDA}
++ AS={5*4*width_N*LAMBDA} PS={10*LAMBDA+2*4*width_N} AD={5*4*width_N*LAMBDA} PD={10*LAMBDA+2*4*width_N}
+M_P1 out a vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P2 out b vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P3 out c vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P4 out d vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+.ends NAND4
+
+* 5 input and (NAND5)
+.subckt NAND5 a b c d e out vdd gnd
+M_N1 out a n1 gnd CMOSN W={5*width_N} L={2*LAMBDA}
++ AS={5*5*width_N*LAMBDA} PS={10*LAMBDA+2*5*width_N} AD={5*5*width_N*LAMBDA} PD={10*LAMBDA+2*5*width_N}
+M_N2 n1 b n2 gnd CMOSN W={5*width_N} L={2*LAMBDA}
++ AS={5*5*width_N*LAMBDA} PS={10*LAMBDA+2*5*width_N} AD={5*5*width_N*LAMBDA} PD={10*LAMBDA+2*5*width_N}
+M_N3 n2 c n3 gnd CMOSN W={5*width_N} L={2*LAMBDA}
++ AS={5*5*width_N*LAMBDA} PS={10*LAMBDA+2*5*width_N} AD={5*5*width_N*LAMBDA} PD={10*LAMBDA+2*5*width_N}
+M_N4 n3 d n4 gnd CMOSN W={5*width_N} L={2*LAMBDA}
++ AS={5*5*width_N*LAMBDA} PS={10*LAMBDA+2*5*width_N} AD={5*5*width_N*LAMBDA} PD={10*LAMBDA+2*5*width_N}
+M_N5 n4 e gnd gnd CMOSN W={5*width_N} L={2*LAMBDA}
++ AS={5*5*width_N*LAMBDA} PS={10*LAMBDA+2*5*width_N} AD={5*5*width_N*LAMBDA} PD={10*LAMBDA+2*5*width_N}
+M_P1 out a vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P2 out b vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P3 out c vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P4 out d vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P5 out e vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+.ends NAND5
+
+* propagate and generate block
+.subckt PG a b p gn vdd gnd
+XXOR a b p vdd gnd XOR2
+XAND a b gn vdd gnd NAND2
+.ends PG
+
+.subckt CARRY p0 p1 p2 p3 p4 g0n g1n g2n g3n g4n c1 c2 c3 c4 c5 vdd gnd
+XINV1 g0n c1 vdd gnd INV
+XINV2 g1n g1 vdd gnd INV
+XINV3 g2n g2 vdd gnd INV
+XINV4 g3n g3 vdd gnd INV
+XINV5 g4n g4 vdd gnd INV
+XINV6 g0n g0 vdd gnd INV
+
+* C2 = G1 + P1·G0
+XAND_C2_1 p1 g0 term_c2_1 vdd gnd NAND2
+XOR_C2 g1n term_c2_1 c2 vdd gnd NAND2
+
+* C3 = G2 + P2·G1 + P2·P1·G0
+XAND_C3_1 p2 g1 term_c3_1 vdd gnd NAND2
+XAND_C3_2 p2 p1 g0 term_c3_2 vdd gnd NAND3
+XOR_C3 g2n term_c3_1 term_c3_2 c3 vdd gnd NAND3
+
+* C4 = G3 + P3·G2 + P3·P2·G1 + P3·P2·P1·G0
+XAND_C4_1 p3 g2 term_c4_1 vdd gnd NAND2
+XAND_C4_2 p3 p2 g1 term_c4_2 vdd gnd NAND3
+XAND_C4_3 p3 p2 p1 g0 term_c4_3 vdd gnd NAND4
+XOR_C4 g3n term_c4_1 term_c4_2 term_c4_3 c4 vdd gnd NAND4
+
+* C5 = G4 + P4·G3 + P4·P3·G2 + P4·P3·P2·G1 + P4·P3·P2·P1·G0
+XAND_C5_1 p4 g3 term_c5_1 vdd gnd NAND2
+XAND_C5_2 p4 p3 g2 term_c5_2 vdd gnd NAND3
+XAND_C5_3 p4 p3 p2 g1 term_c5_3 vdd gnd NAND4
+XAND_C5_4 p4 p3 p2 p1 g0 term_c5_4 vdd gnd NAND5
+XOR_C5 g4n term_c5_1 term_c5_2 term_c5_3 term_c5_4 c5 vdd gnd NAND5
+
+.ends CARRY
+
+.subckt CLA a0 a1 a2 a3 a4 b0 b1 b2 b3 b4 s0 s1 s2 s3 s4 cout vdd gnd
+* Propagate and Generate
+XPG0 a0 b0 p0 g0n vdd gnd PG
+XPG1 a1 b1 p1 g1n vdd gnd PG
+XPG2 a2 b2 p2 g2n vdd gnd PG
+XPG3 a3 b3 p3 g3n vdd gnd PG
+XPG4 a4 b4 p4 g4n vdd gnd PG
+
+* Carry
+XCARRY p0 p1 p2 p3 p4 g0n g1n g2n g3n g4n c1 c2 c3 c4 cout vdd gnd CARRY
+
+* Sum
+XXOR0 p0 gnd s0 vdd gnd XOR2
+XXOR1 p1 c1 s1 vdd gnd XOR2
+XXOR2 p2 c2 s2 vdd gnd XOR2
+XXOR3 p3 c3 s3 vdd gnd XOR2
+XXOR4 p4 c4 s4 vdd gnd XOR2
+.ends CLA
+
+VDD vdd gnd 1.8
+
+* ========= WORST-CASE CARRY PROPAGATION VECTOR =========
+* Bits 1..4: propagate only (P=1, G=0) → a=1, b=0
+Va1 a1 gnd DC 1.8
+Va2 a2 gnd DC 1.8
+Va3 a3 gnd DC 1.8
+Va4 a4 gnd DC 1.8
+
+Vb1 b1 gnd DC 0
+Vb2 b2 gnd DC 0
+Vb3 b3 gnd DC 0
+Vb4 b4 gnd DC 0
+
+* Bit 0: toggle G0 from 0→1 at 20 ns
+* t<20ns: a0=0, b0=1.8  → G0=0, cout=0
+* t>20ns: a0=1.8, b0=1.8 → G0=1, cout=1 (through full P-chain)
+Va0 a0 gnd PULSE(0 1.8 20n 0.1n 0.1n 100n 200n)
+Vb0 b0 gnd DC 1.8
+
+* ========= CLA INSTANCE =========
+XCLA a0 a1 a2 a3 a4  b0 b1 b2 b3 b4  s0 s1 s2 s3 s4  cout  vdd gnd  CLA
+
+* ========= ANALYSIS & MEASURE =========
+.tran 0.05n 60n
+
+* Worst-case propagation delay from a0 to cout (50%–50%)
+.meas tran Tadder TRIG v(a0)  VAL=0.9 RISE=1  TARG v(cout) VAL=0.9 RISE=1
+
+.end

@@ -1,0 +1,81 @@
+* SPICE3 file created from DFF.ext - technology: scmos
+.include TSMC_180nm.txt
+.param SUPPLY=1.8
+.global gnd vdd
+.param LAMBDA=0.09u
+.param width_N=1.8u
+.param width_P=2*width_N
+.option scale=0.01u
+
+M1000 x4 y gnd Gnd CMOSN w=360 l=18
++  ad=19440 pd=828 as=48600 ps=2520
+M1001 x1 clk x2 w_10_n34# CMOSP w=720 l=18
++  ad=38880 pd=1548 as=38880 ps=1548
+M1002 q_int clk x4 Gnd CMOSN w=360 l=18
++  ad=16200 pd=810 as=0 ps=0
+M1003 x2 d vdd w_10_n34# CMOSP w=720 l=18
++  ad=0 pd=0 as=81000 ps=3960
+M1004 q q_int gnd Gnd CMOSN w=180 l=18
++  ad=8100 pd=450 as=0 ps=0
+M1005 q q_int vdd w_182_n34# CMOSP w=360 l=18
++  ad=16200 pd=810 as=0 ps=0
+M1006 y clk vdd w_62_n20# CMOSP w=360 l=18
++  ad=16200 pd=810 as=0 ps=0
+M1007 x3 clk gnd Gnd CMOSN w=360 l=18
++  ad=19440 pd=828 as=0 ps=0
+M1008 q_int y vdd w_122_n20# CMOSP w=360 l=18
++  ad=16200 pd=810 as=0 ps=0
+M1009 y x1 x3 Gnd CMOSN w=360 l=18
++  ad=16200 pd=810 as=0 ps=0
+M1010 x1 d gnd Gnd CMOSN w=180 l=18
++  ad=9720 pd=468 as=0 ps=0
+C0 y w_122_n20# 0.08fF
+C1 d clk 0.19fF
+C2 w_10_n34# clk 0.08fF
+C3 w_10_n34# d 0.08fF
+C4 clk x4 0.05fF
+C5 y vdd 0.57fF
+C6 clk vdd 0.62fF
+C7 gnd clk 0.05fF
+C8 x1 x3 0.05fF
+C9 x2 x1 0.82fF
+C10 d vdd 0.03fF
+C11 w_122_n20# vdd 0.08fF
+C12 q_int clk 0.08fF
+C13 w_10_n34# vdd 0.12fF
+C14 q vdd 0.45fF
+C15 q gnd 0.21fF
+C16 gnd x4 0.46fF
+C17 w_122_n20# q_int 0.08fF
+C18 y w_62_n20# 0.07fF
+C19 w_62_n20# clk 0.08fF
+C20 x1 clk 0.12fF
+C21 q w_182_n34# 0.06fF
+C22 y x3 0.45fF
+C23 q_int q 0.05fF
+C24 q_int x4 0.46fF
+C25 vdd w_182_n34# 0.09fF
+C26 q_int vdd 0.44fF
+C27 q_int gnd 0.05fF
+C28 x1 w_10_n34# 0.03fF
+C29 w_62_n20# vdd 0.08fF
+C30 q_int w_182_n34# 0.06fF
+C31 x1 gnd 0.26fF
+C32 x2 w_10_n34# 0.02fF
+C33 y clk 0.65fF
+C34 gnd x3 0.45fF
+C35 x2 vdd 0.88fF
+C36 x4 Gnd 0.02fF
+C37 x3 Gnd 0.02fF
+C38 gnd Gnd 1.81fF
+C39 q Gnd 0.07fF
+C40 q_int Gnd 0.68fF
+C41 y Gnd 1.35fF
+C42 x1 Gnd 0.47fF
+C43 vdd Gnd 2.39fF
+C44 clk Gnd 0.19fF
+C45 d Gnd 0.10fF
+C46 w_182_n34# Gnd 1.25fF
+C47 w_122_n20# Gnd 1.36fF
+C48 w_62_n20# Gnd 1.36fF
+C49 w_10_n34# Gnd 3.08fF

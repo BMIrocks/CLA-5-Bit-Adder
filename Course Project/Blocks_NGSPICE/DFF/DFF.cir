@@ -1,0 +1,38 @@
+**D-Flipflop Block (TSPC)
+.include INV.cir
+
+.subckt DFF in clk q vdd gnd
+*first stage
+M1N w12 in gnd gnd CMOSN W={width_N} L={LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+
+M2P w12 clk w23 vdd CMOSP W={width_P*2} L={LAMBDA}
++ AS={5*2*width_P*LAMBDA} PS={10*LAMBDA+2*2*width_P} AD={5*2*width_P*LAMBDA} PD={10*LAMBDA+2*2*width_P}
+
+M3P w23 in vdd vdd CMOSP W={width_P*2} L={2*LAMBDA}
++ AS={5*2*width_P*LAMBDA} PS={10*LAMBDA+2*2*width_P} AD={5*2*width_P*LAMBDA} PD={10*LAMBDA+2*2*width_P}
+
+*second stage
+M4N w45 clk gnd gnd CMOSN W={width_N*2} L={LAMBDA}
++ AS={5*2*width_N*LAMBDA} PS={10*LAMBDA+2*2*width_N} AD={5*2*width_N*LAMBDA} PD={10*LAMBDA+2*2*width_N}
+
+M5N w56 w12 w45 gnd CMOSN W={width_N*2} L={LAMBDA}
++ AS={5*2*width_N*LAMBDA} PS={10*LAMBDA+2*2*width_N} AD={5*2*width_N*LAMBDA} PD={10*LAMBDA+2*2*width_N}
+
+M6P w56 clk vdd vdd CMOSP W={width_P} L={LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+*third stage
+M7N w78 w56 gnd gnd CMOSN W={width_N*2} L={LAMBDA}
++ AS={5*2*width_N*LAMBDA} PS={10*LAMBDA+2*2*width_N} AD={5*2*width_N*LAMBDA} PD={10*LAMBDA+2*2*width_N}
+
+M8N qn clk w78 gnd CMOSN W={width_N*2} L={LAMBDA}
++ AS={5*2*width_N*LAMBDA} PS={10*LAMBDA+2*2*width_N} AD={5*2*width_N*LAMBDA} PD={10*LAMBDA+2*2*width_N}
+
+M9P qn w56 vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+*final inverter
+XINV1 qn q vdd gnd INV
+
+.ends DFF

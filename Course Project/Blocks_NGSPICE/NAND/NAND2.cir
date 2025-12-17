@@ -1,0 +1,13 @@
+**2-Input NAND Gate Block
+.include INV.cir
+
+.subckt NAND2 a b out vdd gnd
+M_N1 out a n1 gnd CMOSN W={2*width_N} L={2*LAMBDA}
++ AS={5*2*width_N*LAMBDA} PS={10*LAMBDA+2*2*width_N} AD={5*2*width_N*LAMBDA} PD={10*LAMBDA+2*2*width_N}
+M_N2 n1 b gnd gnd CMOSN W={2*width_N} L={2*LAMBDA}
++ AS={5*2*width_N*LAMBDA} PS={10*LAMBDA+2*2*width_N} AD={5*2*width_N*LAMBDA} PD={10*LAMBDA+2*2*width_N}
+M_P1 out a vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P2 out b vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+.ends NAND2

@@ -1,0 +1,173 @@
+**D-Flipflop Timing Analysis
+**Setup Time, Hold Time, and Clock-to-Q Delay Measurement
+.include TSMC_180nm.txt
+.include DFF.txt
+.param SUPPLY=1.8
+.global gnd vdd
+.param LAMBDA=0.09u
+.param width_N=1.8u
+.param width_P=2*width_N
+
+VDD vdd gnd 1.8
+
+****************************************************************************
+** TEST 1: Clock-to-Q Delay (Tpcq) Measurement
+** This measures propagation delay from clock edge to output change
+****************************************************************************
+.subckt TEST_TPCQ
+Vin1 in1 gnd PULSE(0 1.8 5n 0.1n 0.1n 20n 50n)
+Vclk1 clk1 gnd PULSE(0 1.8 10n 0.1n 0.1n 15n 50n)
+XDFF1 in1 clk1 q1 vdd gnd DFF
+.ends TEST_TPCQ
+
+****************************************************************************
+** TEST 2: Setup Time (Tsu) Measurement
+** Setup time is the minimum time data must be stable BEFORE clock edge
+** We vary the data arrival time relative to clock edge
+****************************************************************************
+.subckt TEST_SETUP
+* Clock with rising edge at 20ns
+Vclk2 clk2 gnd PULSE(0 1.8 20n 0.1n 0.1n 15n 50n)
+
+* Test different setup times by varying data transition time
+* Data transitions at (20ns - setup_time)
+Vin2a in2a gnd PULSE(0 1.8 19.5n 0.1n 0.1n 20n 100n)  ; 0.5ns before clk
+Vin2b in2b gnd PULSE(0 1.8 19.0n 0.1n 0.1n 20n 100n)  ; 1.0ns before clk
+Vin2c in2c gnd PULSE(0 1.8 18.5n 0.1n 0.1n 20n 100n)  ; 1.5ns before clk
+Vin2d in2d gnd PULSE(0 1.8 18.0n 0.1n 0.1n 20n 100n)  ; 2.0ns before clk
+Vin2e in2e gnd PULSE(0 1.8 17.5n 0.1n 0.1n 20n 100n)  ; 2.5ns before clk
+
+XDFF2a in2a clk2 q2a vdd gnd DFF
+XDFF2b in2b clk2 q2b vdd gnd DFF
+XDFF2c in2c clk2 q2c vdd gnd DFF
+XDFF2d in2d clk2 q2d vdd gnd DFF
+XDFF2e in2e clk2 q2e vdd gnd DFF
+.ends TEST_SETUP
+
+****************************************************************************
+** TEST 3: Hold Time (Th) Measurement  
+** Hold time is the minimum time data must remain stable AFTER clock edge
+** We vary when data changes after the clock edge
+****************************************************************************
+.subckt TEST_HOLD
+* Clock with rising edge at 40ns
+Vclk3 clk3 gnd PULSE(0 1.8 40n 0.1n 0.1n 15n 100n)
+
+* Data stable before clock, changes at different times after clock edge
+* Initial pulse ends at (40ns + hold_time)
+Vin3a in3a gnd PULSE(1.8 0 40.05n 0.1n 0.1n 20n 100n)  ; changes 0.05ns after clk
+Vin3b in3b gnd PULSE(1.8 0 40.1n 0.1n 0.1n 20n 100n)   ; changes 0.1ns after clk
+Vin3c in3c gnd PULSE(1.8 0 40.2n 0.1n 0.1n 20n 100n)   ; changes 0.2ns after clk
+Vin3d in3d gnd PULSE(1.8 0 40.3n 0.1n 0.1n 20n 100n)   ; changes 0.3ns after clk
+Vin3e in3e gnd PULSE(1.8 0 40.5n 0.1n 0.1n 20n 100n)   ; changes 0.5ns after clk
+
+XDFF3a in3a clk3 q3a vdd gnd DFF
+XDFF3b in3b clk3 q3b vdd gnd DFF
+XDFF3c in3c clk3 q3c vdd gnd DFF
+XDFF3d in3d clk3 q3d vdd gnd DFF
+XDFF3e in3e clk3 q3e vdd gnd DFF
+.ends TEST_HOLD
+
+****************************************************************************
+** TEST 4: Minimum Clock Period
+** Determines minimum clock period = Tpcq + Tcomb + Tsu
+****************************************************************************
+.subckt TEST_MIN_PERIOD
+* Test with different clock periods
+Vin4 in4 gnd PULSE(0 1.8 2n 0.1n 0.1n 5n 10n)
+
+* Very fast clock - 3ns period
+Vclk4a clk4a gnd PULSE(0 1.8 5n 0.1n 0.1n 1n 3n)
+XDFF4a in4 clk4a q4a vdd gnd DFF
+
+* Medium clock - 5ns period  
+Vclk4b clk4b gnd PULSE(0 1.8 5n 0.1n 0.1n 2n 5n)
+XDFF4b in4 clk4b q4b vdd gnd DFF
+
+* Slow clock - 10ns period
+Vclk4c clk4c gnd PULSE(0 1.8 5n 0.1n 0.1n 4n 10n)
+XDFF4c in4 clk4c q4c vdd gnd DFF
+.ends TEST_MIN_PERIOD
+
+* Instantiate all tests
+XTEST1 TEST_TPCQ
+XTEST2 TEST_SETUP
+XTEST3 TEST_HOLD
+XTEST4 TEST_MIN_PERIOD
+
+.control
+tran 0.01n 80n
+
+****************************************************************************
+** Clock-to-Q Delay Measurements
+****************************************************************************
+echo "==================== CLOCK-TO-Q DELAY (Tpcq) ===================="
+* Rising edge Tpcq
+meas tran clk1_rise WHEN v(xtest1.clk1)=0.9 RISE=1
+meas tran q1_rise WHEN v(xtest1.q1)=0.9 RISE=1
+meas tran Tpcq_rise param='q1_rise-clk1_rise'
+
+* Falling edge Tpcq
+meas tran clk1_fall_trigger WHEN v(xtest1.clk1)=0.9 FALL=1
+meas tran q1_fall WHEN v(xtest1.q1)=0.9 FALL=1
+meas tran Tpcq_fall param='q1_fall-clk1_fall_trigger'
+
+print Tpcq_rise Tpcq_fall
+
+****************************************************************************
+** Setup Time Analysis
+****************************************************************************
+echo "==================== SETUP TIME (Tsu) ===================="
+echo "Checking which setup times cause metastability or failure..."
+
+* Measure output transitions for different setup times
+meas tran q2a_final FIND v(xtest2.q2a) AT=30n
+meas tran q2b_final FIND v(xtest2.q2b) AT=30n
+meas tran q2c_final FIND v(xtest2.q2c) AT=30n
+meas tran q2d_final FIND v(xtest2.q2d) AT=30n
+meas tran q2e_final FIND v(xtest2.q2e) AT=30n
+
+echo "q2a (0.5ns setup): " q2a_final
+echo "q2b (1.0ns setup): " q2b_final
+echo "q2c (1.5ns setup): " q2c_final
+echo "q2d (2.0ns setup): " q2d_final
+echo "q2e (2.5ns setup): " q2e_final
+
+****************************************************************************
+** Hold Time Analysis  
+****************************************************************************
+echo "==================== HOLD TIME (Th) ===================="
+echo "Checking which hold times cause metastability or failure..."
+
+* Measure output values for different hold times
+meas tran q3a_final FIND v(xtest3.q3a) AT=50n
+meas tran q3b_final FIND v(xtest3.q3b) AT=50n
+meas tran q3c_final FIND v(xtest3.q3c) AT=50n
+meas tran q3d_final FIND v(xtest3.q3d) AT=50n
+meas tran q3e_final FIND v(xtest3.q3e) AT=50n
+
+echo "q3a (0.05ns hold): " q3a_final
+echo "q3b (0.10ns hold): " q3b_final
+echo "q3c (0.20ns hold): " q3c_final
+echo "q3d (0.30ns hold): " q3d_final
+echo "q3e (0.50ns hold): " q3e_final
+
+****************************************************************************
+** Plotting
+****************************************************************************
+* Plot Tpcq test
+plot v(xtest1.clk1) v(xtest1.in1)+2 v(xtest1.q1)+4
+title "Clock-to-Q Delay Test"
+
+* Plot Setup time test
+plot v(xtest2.clk2) v(xtest2.in2a)+2 v(xtest2.in2c)+4 v(xtest2.in2e)+6 v(xtest2.q2a)+8 v(xtest2.q2c)+10 v(xtest2.q2e)+12
+title "Setup Time Test - Different Data Arrival Times"
+
+* Plot Hold time test
+plot v(xtest3.clk3) v(xtest3.in3a)+2 v(xtest3.in3c)+4 v(xtest3.in3e)+6 v(xtest3.q3a)+8 v(xtest3.q3c)+10 v(xtest3.q3e)+12
+title "Hold Time Test - Data Changes After Clock"
+
+run
+.endc
+
+.end

@@ -1,0 +1,11 @@
+**Inverter Block
+.param LAMBDA=0.09u
+.param width_N=1.8u
+.param width_P=2*width_N
+
+.subckt INV in out vdd gnd
+M_N out in gnd gnd CMOSN W={width_N} L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_P out in vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+.ends INV

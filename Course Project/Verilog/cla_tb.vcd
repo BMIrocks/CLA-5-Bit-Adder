@@ -1,0 +1,215 @@
+$date
+	Thu Dec 04 07:43:27 2025
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module cla_5bit_nand_only_tb $end
+$var wire 5 ! sum [4:0] $end
+$var wire 1 " cout $end
+$var reg 5 # a_in [4:0] $end
+$var reg 5 $ b_in [4:0] $end
+$var reg 1 % cin $end
+$var reg 1 & clk $end
+$scope module uut $end
+$var wire 5 ' a_in [4:0] $end
+$var wire 5 ( b_in [4:0] $end
+$var wire 1 % cin $end
+$var wire 1 & clk $end
+$var wire 5 ) p [4:0] $end
+$var wire 5 * g [4:0] $end
+$var wire 1 + c4 $end
+$var wire 1 , c3 $end
+$var wire 1 - c2 $end
+$var wire 1 . c1 $end
+$var wire 1 / c0 $end
+$var reg 5 0 a [4:0] $end
+$var reg 5 1 b [4:0] $end
+$var reg 1 " cout $end
+$var reg 5 2 sum [4:0] $end
+$var reg 5 3 sum_comb [4:0] $end
+$scope function and2 $end
+$upscope $end
+$scope function inv $end
+$upscope $end
+$scope function nand2 $end
+$upscope $end
+$scope function or2 $end
+$upscope $end
+$scope function xor2 $end
+$upscope $end
+$upscope $end
+$scope task print_after_output $end
+$upscope $end
+$scope task print_after_sample $end
+$upscope $end
+$scope task print_before $end
+$var reg 5 4 ai [4:0] $end
+$var reg 5 5 bi [4:0] $end
+$var reg 1 6 c $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+x6
+bx 5
+bx 4
+bx 3
+bx 2
+bx 1
+bx 0
+x/
+x.
+x-
+x,
+x+
+bx *
+bx )
+b0 (
+b0 '
+0&
+0%
+b0 $
+b0 #
+x"
+bx !
+$end
+#2000
+06
+b0 5
+b0 4
+#5000
+0+
+0,
+0-
+0.
+0/
+b0 3
+b0 *
+b0 )
+b0 1
+b0 0
+1&
+#10000
+0&
+#15000
+0"
+b0 !
+b0 2
+1&
+#16000
+b1 $
+b1 (
+b1 #
+b1 '
+#18000
+b1 5
+b1 4
+#20000
+0&
+#25000
+b10 3
+1/
+b1 *
+b1 1
+b1 0
+1&
+#30000
+0&
+#35000
+b10 !
+b10 2
+1&
+#36000
+b1111 #
+b1111 '
+#38000
+b1111 4
+#40000
+0&
+#45000
+1,
+1-
+1.
+b10000 3
+b1110 )
+b1111 0
+1&
+#50000
+0&
+#55000
+b10000 !
+b10000 2
+1&
+#56000
+b1010 $
+b1010 (
+b10101 #
+b10101 '
+#58000
+b1010 5
+b10101 4
+#60000
+0&
+#65000
+0,
+0.
+0-
+0/
+b11111 3
+b0 *
+b11111 )
+b1010 1
+b10101 0
+1&
+#70000
+0&
+#75000
+b11111 !
+b11111 2
+1&
+#76000
+b11111 $
+b11111 (
+b11111 #
+b11111 '
+#78000
+b11111 5
+b11111 4
+#80000
+0&
+#85000
+1-
+1+
+1.
+1,
+1/
+b11110 3
+b11111 *
+b0 )
+b11111 1
+b11111 0
+1&
+#90000
+0&
+#95000
+1"
+b11110 !
+b11110 2
+1&
+#100000
+0&
+#105000
+1&
+#110000
+0&
+#115000
+1&
+#116000

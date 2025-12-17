@@ -1,0 +1,37 @@
+**D-Flipflop Testbench
+.include TSMC_180nm.txt
+.include DFF.cir
+.param SUPPLY=1.8
+.global gnd vdd
+.param LAMBDA=0.09u
+.param width_N=1.8u
+.param width_P=2*width_N
+
+VDD vdd gnd 1.8
+Vin in gnd PULSE(0 1.8 0 0.1n 0.1n 7.5n 15n)
+Vclk clk gnd PULSE(0 1.8 2n 0.1n 0.1n 5n 10n)
+
+XDFF in clk q vdd gnd DFF
+
+.control
+tran 0.1n 100n
+run
+plot v(q) v(clk)+2 v(in)+4
+
+* Tpcq: 50% of q - 50% of clk
+meas tran clk_50_rise  WHEN v(clk)=0.9 RISE=3
+meas tran q_50_rise    WHEN v(q)=0.9   RISE=2
+
+meas tran clk_50_fall  WHEN v(clk)=0.9 RISE=5
+meas tran q_50_fall    WHEN v(q)=0.9   FALL=2
+.endc
+.end
+
+* Expected results:
+* clk_50_rise  = 2.20500e-08
+*q_50_rise    = 2.21006e-08
+*tpcq_rise    = 5.05848e-11
+
+*clk_50_fall  = 4.20500e-08
+*q_50_fall    = 4.21571e-08
+*tpcq_fall    = 1.07135e-10

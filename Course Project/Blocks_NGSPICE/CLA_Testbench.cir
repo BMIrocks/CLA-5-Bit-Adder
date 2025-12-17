@@ -1,0 +1,36 @@
+**5-bit Carry Lookahead Adder Testbench
+.include TSMC_180nm.txt
+.include CLA.cir
+.param SUPPLY=1.8
+.global gnd vdd
+.param LAMBDA=0.09u
+.param width_N=1.8u
+.param width_P=2*width_N
+
+VDD vdd gnd 1.8
+
+* 10011 + 10001 = 00100 with cout = 1
+Va0 a0 gnd PULSE(0 1.8 20n 0 0 100n 200n)
+Va1 a1 gnd PULSE(0 1.8 20n 0 0 100n 200n)
+Va2 a2 gnd PULSE(0 0 20n 0 0 100n 200n)
+Va3 a3 gnd PULSE(0 0 20n 0 0 100n 200n)
+Va4 a4 gnd PULSE(0 1.8 20n 0 0 100n 200n)
+
+Vb0 b0 gnd PULSE(0 1.8 20n 0 0 100n 200n)
+Vb1 b1 gnd PULSE(0 0 20n 0 0 100n 200n)
+Vb2 b2 gnd PULSE(0 0 20n 0 0 100n 200n)
+Vb3 b3 gnd PULSE(0 0 20n 0 0 100n 200n)
+Vb4 b4 gnd PULSE(0 1.8 20n 0 0 100n 200n)
+
+XCLA a0 a1 a2 a3 a4 b0 b1 b2 b3 b4 s0 s1 s2 s3 s4 cout vdd gnd CLA
+
+.control
+tran 0.1n 50n
+plot v(a0) v(a1)+2 v(a2)+4 v(a3)+6 v(a4)+8 
+plot v(b0) v(b1)+2 v(b2)+4 v(b3)+6 v(b4)+8 
+plot v(s0) v(s1)+2 v(s2)+4 v(s3)+6 v(s4)+8 
+plot v(cout)
+run
+.endc
+
+.end

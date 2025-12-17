@@ -1,0 +1,67 @@
+.include TSMC_180nm.txt
+.include DFF.cir
+
+.param SUPPLY=1.8
+.global gnd vdd
+
+VDD vdd gnd {SUPPLY}
+
+* Clock and data sources: DARR is the data rise time (for setup sweep),
+* DFALL is the data fall time (for hold sweep).
+.param DARR=3n
+.param DFALL=6n
+
+Vclk clk gnd PULSE(0 {SUPPLY} 5n 0.1n 0.1n 5n 10n)
+* Vdata: pulse rises at time DARR, falls at DFALL (pulse width = DFALL - DARR)
+Vdata data gnd PULSE(0 {SUPPLY} {DARR} 0.1n 0.1n {DFALL} 20n)
+
+* Instantiate DFF: port order must match your DFF.cir (data clk q vdd gnd)
+XDFF data clk q vdd gnd DFF
+
+.control
+  set color0=white
+  set color1=black
+
+  * -------------------------
+  * 1) Nominal clock-to-Q
+  * -------------------------
+  echo ----- Nominal Tpcq measurement -----
+  tran 0.01n 12n
+  meas tran tpcq TRIG v(clk) val={SUPPLY/2} rise=1 TARG v(q) val={SUPPLY/2} rise=1
+  echo Tpcq = $&tpcq
+
+  * -------------------------
+  * 2) Setup sweep (sweep data arrival time)
+  *    We sweep DARR up to just before clock edge (5n) and record tpcq.
+  *    Use .step to run multiple transient sims; results appear per-step in the measurement report.
+  * -------------------------
+  echo ----- Setup sweep: sweep data rise time (DARR) -----
+  .step param DARR LIST 3n 4n 4.5n 4.8n 4.9n 4.95n 4.99n
+  * re-define Vdata to reference DARR and DFALL (DFALL must be > DARR here)
+  Vdata_step data gnd PULSE(0 {SUPPLY} {DARR} 0.1n 0.1n {DFALL} 20n)
+  tran 0.01n 12n
+  meas tran tpcq_setup TRIG v(clk) val={SUPPLY/2} rise=1 TARG v(q) val={SUPPLY/2} rise=1
+  * Note: the meas output will produce one value per .step; inspect the .mt0/.meas results or the screen
+  .step param DARR LIST
+  * remove the temporary source before continuing
+  alter Vdata_step OFF
+  .reset
+
+  * -------------------------
+  * 3) Hold sweep (sweep data fall time)
+  *    Keep DARR safely before clock, then move DFALL close to/after clock edge.
+  * -------------------------
+  echo ----- Hold sweep: sweep data fall time (DFALL) -----
+  .param DARR=3n
+  .step param DFALL LIST 5.01n 5.005n 5.001n 5.0005n 5.0001n 5n
+  Vdata_hold data gnd PULSE(0 {SUPPLY} {DARR} 0.1n 0.1n {DFALL} 20n)
+  tran 0.01n 12n
+  meas tran q_after TRIG v(clk) val={SUPPLY/2} rise=1 TARG v(q) val={SUPPLY/2} at=7n
+  * q_after > SUPPLY/2 means a '1' was captured; values will be available per-step in meas output
+  alter Vdata_hold OFF
+  .reset
+
+  echo "----- End of scripted measurements -----"
+.endc
+
+.end

@@ -1,0 +1,25 @@
+**5-Input NAND Gate Block
+.include INV.cir
+
+.subckt NAND5 a b c d e out vdd gnd
+M_N1 out a n1 gnd CMOSN W={5*width_N} L={2*LAMBDA}
++ AS={5*5*width_N*LAMBDA} PS={10*LAMBDA+2*5*width_N} AD={5*5*width_N*LAMBDA} PD={10*LAMBDA+2*5*width_N}
+M_N2 n1 b n2 gnd CMOSN W={5*width_N} L={2*LAMBDA}
++ AS={5*5*width_N*LAMBDA} PS={10*LAMBDA+2*5*width_N} AD={5*5*width_N*LAMBDA} PD={10*LAMBDA+2*5*width_N}
+M_N3 n2 c n3 gnd CMOSN W={5*width_N} L={2*LAMBDA}
++ AS={5*5*width_N*LAMBDA} PS={10*LAMBDA+2*5*width_N} AD={5*5*width_N*LAMBDA} PD={10*LAMBDA+2*5*width_N}
+M_N4 n3 d n4 gnd CMOSN W={5*width_N} L={2*LAMBDA}
++ AS={5*5*width_N*LAMBDA} PS={10*LAMBDA+2*5*width_N} AD={5*5*width_N*LAMBDA} PD={10*LAMBDA+2*5*width_N}
+M_N5 n4 e gnd gnd CMOSN W={5*width_N} L={2*LAMBDA}
++ AS={5*5*width_N*LAMBDA} PS={10*LAMBDA+2*5*width_N} AD={5*5*width_N*LAMBDA} PD={10*LAMBDA+2*5*width_N}
+M_P1 out a vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P2 out b vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P3 out c vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P4 out d vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_P5 out e vdd vdd CMOSP W={width_P} L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+.ends NAND5

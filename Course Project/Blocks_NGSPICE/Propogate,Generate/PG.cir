@@ -1,0 +1,9 @@
+**Propagate and Generate Block
+.include INV.cir
+.include NAND2.cir
+.include XOR2.cir
+
+.subckt PG a b p gn vdd gnd
+XXOR a b p vdd gnd XOR2
+XAND a b gn vdd gnd NAND2
+.ends PG

@@ -1,0 +1,38 @@
+**Carry Lookahead Logic Block
+.include INV.cir
+.include NAND2.cir
+.include NAND3.cir
+.include NAND4.cir
+.include NAND5.cir
+
+.subckt CARRY p0 p1 p2 p3 p4 g0n g1n g2n g3n g4n c1 c2 c3 c4 c5 vdd gnd
+XINV1 g0n c1 vdd gnd INV
+XINV2 g1n g1 vdd gnd INV
+XINV3 g2n g2 vdd gnd INV
+XINV4 g3n g3 vdd gnd INV
+XINV5 g4n g4 vdd gnd INV
+XINV6 g0n g0 vdd gnd INV
+
+* C2 = G1 + P1.G0
+XAND_C2_1 p1 g0 term_c2_1 vdd gnd NAND2
+XOR_C2 g1n term_c2_1 c2 vdd gnd NAND2
+
+* C3 = G2 + P2.G1 + P2.P1.G0
+XAND_C3_1 p2 g1 term_c3_1 vdd gnd NAND2
+XAND_C3_2 p2 p1 g0 term_c3_2 vdd gnd NAND3
+XOR_C3 g2n term_c3_1 term_c3_2 c3 vdd gnd NAND3
+
+* C4 = G3 + P3.G2 + P3.P2.G1 + P3.P2.P1.G0
+XAND_C4_1 p3 g2 term_c4_1 vdd gnd NAND2
+XAND_C4_2 p3 p2 g1 term_c4_2 vdd gnd NAND3
+XAND_C4_3 p3 p2 p1 g0 term_c4_3 vdd gnd NAND4
+XOR_C4 g3n term_c4_1 term_c4_2 term_c4_3 c4 vdd gnd NAND4
+
+* C5 = G4 + P4.G3 + P4.P3.G2 + P4.P3.P2.G1 + P4.P3·P2·P1·G0
+XAND_C5_1 p4 g3 term_c5_1 vdd gnd NAND2
+XAND_C5_2 p4 p3 g2 term_c5_2 vdd gnd NAND3
+XAND_C5_3 p4 p3 p2 g1 term_c5_3 vdd gnd NAND4
+XAND_C5_4 p4 p3 p2 p1 g0 term_c5_4 vdd gnd NAND5
+XOR_C5 g4n term_c5_1 term_c5_2 term_c5_3 term_c5_4 c5 vdd gnd NAND5
+
+.ends CARRY

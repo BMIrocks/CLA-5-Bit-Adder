@@ -1,0 +1,10 @@
+**2-Input XOR Gate Block
+.include INV.cir
+.include NAND2.cir
+
+.subckt XOR2 a b out vdd gnd
+XNAND1 a b nand_ab vdd gnd NAND2
+XNAND2 a nand_ab nand_a vdd gnd NAND2
+XNAND3 b nand_ab nand_b vdd gnd NAND2
+XNAND4 nand_a nand_b out vdd gnd NAND2
+.ends XOR2
